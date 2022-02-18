@@ -15,7 +15,7 @@ router.get("/", (req, res) => {
       res.json(err);
     });
 });
-router.post("/", mid.validateProjectId, mid.validateTask, (req, res) => {
+router.post("/", mid.validateTask, mid.validateProjectId, (req, res) => {
   model
     .create(req.body)
     .then((newTask) => {
