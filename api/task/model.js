@@ -5,8 +5,8 @@ function mapProject(task) {
   return { ...task, task_completed: Boolean(task.task_completed) };
 }
 
-function get() {
-  return db("tasks as t")
+async function get() {
+  const result = await db("tasks as t")
     .leftJoin("projects as p", "p.project_id", "t.project_id")
     .select(
       "t.task_id",
@@ -16,9 +16,14 @@ function get() {
       "p.project_name",
       "p.project_description"
     );
-  // .then((task) => {
-  //   task.map(mapProject);
+  const task = await result.map((task) => {
+    // console.log({ ...task, task_completed: Boolean(task.task_completed) });
+    return { ...task, task_completed: Boolean(task.task_completed) };
+  });
+  // .then((tasks) => {
+  //   tasks.map(mapProject);
   // });
+  return task;
 }
 
 async function getById(task_id) {
@@ -32,7 +37,8 @@ async function getById(task_id) {
       "t.task_completed",
       "p.project_id"
     )
-    .first();
+    .first()
+    .then(mapProject);
 
   return result;
 }
