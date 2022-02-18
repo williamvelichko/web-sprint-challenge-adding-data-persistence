@@ -2,6 +2,7 @@
 // build your `/api/projects` router here
 const express = require("express");
 const model = require("./model");
+const mid = require("./../middleware");
 
 const router = express.Router();
 
@@ -12,11 +13,18 @@ router.get("/", (req, res) => {
       res.json(resources);
     })
     .catch((err) => {
-      res.status(500).json({ message: "error" });
+      res.status(500).json(err);
     });
 });
-router.post("/", (req, res) => {
-  console.log("post resources");
+router.post("/", mid.validateResource, (req, res) => {
+  model
+    .create(req.body)
+    .then((newResource) => {
+      res.json(newResource);
+    })
+    .catch((err) => {
+      res.status(500).json(err);
+    });
 });
 
 module.exports = router;

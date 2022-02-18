@@ -2,6 +2,7 @@
 const express = require("express");
 const model = require("./model");
 const router = express.Router();
+const mid = require("./../middleware");
 
 router.get("/", (req, res) => {
   model
@@ -13,8 +14,15 @@ router.get("/", (req, res) => {
       res.json(err);
     });
 });
-router.post("/", (req, res) => {
-  console.log("post projects");
+router.post("/", mid.validateProject, (req, res) => {
+  model
+    .create(req.body)
+    .then((newProject) => {
+      res.json(newProject);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
 });
 
 module.exports = router;
