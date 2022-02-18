@@ -3,6 +3,7 @@
 const express = require("express");
 const model = require("./model");
 const router = express.Router();
+const mid = require("../middleware");
 
 router.get("/", (req, res) => {
   model
@@ -14,8 +15,15 @@ router.get("/", (req, res) => {
       res.json(err);
     });
 });
-router.post("/", (req, res) => {
-  console.log("post tasks");
+router.post("/", mid.validateProjectId, mid.validateTask, (req, res) => {
+  model
+    .create(req.body)
+    .then((newTask) => {
+      res.json(newTask);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
 });
 
 module.exports = router;

@@ -1,10 +1,10 @@
 exports.seed = function (knex) {
   // Deletes ALL existing entries
-  return knex("task")
+  return knex("tasks")
     .del()
     .then(function () {
       // Inserts seed entries
-      return knex("task").insert([
+      return knex("tasks").insert([
         { task_description: "just make it", project_id: 1 },
       ]);
     });

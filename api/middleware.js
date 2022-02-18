@@ -26,10 +26,31 @@ const validateResource = async (req, res, next) => {
   }
 };
 
-const validateTask = (req, res, next) => {};
+const validateProjectId = async (req, res, next) => {
+  const { project_id } = req.body;
+
+  const result = await db("projects").where("project_id", project_id).first();
+
+  if (result) {
+    next();
+  } else {
+    res.status(404).json({ message: "invalid project_id" });
+  }
+};
+
+const validateTask = (req, res, next) => {
+  const { task_description, project_id } = req.body;
+
+  if (!task_description || !project_id) {
+    res.status(404).json({ message: "missing description or project_id" });
+  } else {
+    next();
+  }
+};
 
 module.exports = {
   validateProject,
   validateResource,
   validateTask,
+  validateProjectId,
 };
